@@ -134,7 +134,7 @@ func TestUnreachableHost(t *testing.T) {
 	})
 	t.Log(errDegraded)
 }
-
+// xd ne
 //https://bugzilla.redhat.com/show_bug.cgi?id=1838973
 func latestArchiveContainsPodLogs(t *testing.T) {
 	logCount, err :=  latestArchiveContainsFiles(t, `^config/pod/openshift-monitoring/logs/.*\.log$`)
