@@ -63,7 +63,12 @@ func New(basePath string, interval time.Duration) *Recorder {
 func (r *Recorder) Record(record record.Record) error {
 	r.lock.Lock()
 	defer r.lock.Unlock()
-	klog.V(4).Infof("Recording %s with fingerprint=%s", record.Name, record.Fingerprint)
+	recordName := record.Name
+	extension := record.Item.GetExtension()
+	if len(extension) > 0 {
+		recordName = fmt.Sprintf("%s.%s", recordName, extension)
+	}
+	klog.V(4).Infof("Recording %s with fingerprint=%s", recordName, record.Fingerprint)
 	existing, ok := r.records[record.Name]
 	if ok {
 		if len(record.Fingerprint) > 0 && record.Fingerprint == existing.fingerprint {
@@ -82,11 +87,6 @@ func (r *Recorder) Record(record record.Record) error {
 		return err
 	}
 
-	recordName := record.Name
-	extension := record.Item.GetExtension()
-	if len(extension) > 0 {
-		recordName = fmt.Sprintf("%s.%s", record.Name, extension)
-	}
 
 	r.records[record.Name] = &memoryRecord{
 		name:        recordName,
